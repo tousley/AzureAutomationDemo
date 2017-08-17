@@ -1,0 +1,9 @@
+Set-AzureRmCurrentStorageAccount -ResourceGroupName ManageGroup -Name terrencesa
+
+# get the URI with the SAS token
+$templateuri = New-AzureStorageBlobSASToken -Container templates -Blob win2k12r2_arm_template.json -Permission r `
+  -ExpiryTime (Get-Date).AddHours(2.0) -FullUri
+
+# provide URI with SAS token during deployment
+New-AzureRmResourceGroup -Name ExampleGroup -Location "South Central US"
+New-AzureRmResourceGroupDeployment -ResourceGroupName ExampleGroup -TemplateUri $templateuri
